@@ -2,12 +2,22 @@ require 'active_record'
 require 'fileutils'
 
 namespace :db do
+
+  desc "dump the schema into db/schema.rb"
+  task :dump_schema do
+    File.open(ENV['SCHEMA'] || File.join("db", "schema.rb"), "w") do |file|
+      ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, file)
+    end
+    Rake::Task["dump_schema"].reenable
+  end
+  
   desc "migrate your database"
   task :migrate do
     ActiveRecord::Migrator.migrate(
       'db/migrate', 
       ENV["VERSION"] ? ENV["VERSION"].to_i : nil
     )
+    Rake::Task["db:dump_schema"].invoke if ActiveRecord::Base.schema_format == :ruby
   end
 
   desc "create an ActiveRecord migration in ./db/migrate"
