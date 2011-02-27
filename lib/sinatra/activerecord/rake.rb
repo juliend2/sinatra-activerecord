@@ -8,7 +8,7 @@ namespace :db do
     File.open(ENV['SCHEMA'] || File.join("db", "schema.rb"), "w") do |file|
       ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, file)
     end
-    Rake::Task["dump_schema"].reenable
+    Rake::Task["db:dump_schema"].reenable
   end
   
   desc "migrate your database"
