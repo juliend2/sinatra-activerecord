@@ -44,4 +44,10 @@ namespace :db do
       EOS
     end
   end
+
+  desc 'run the db/seed.rb file'
+  task :seed do
+    load File.join('db', 'seed.rb')
+  end
+
 end
